@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: "0 9 * * 1"  # Ejecutar todos los lunes a las 9:00 UTC
+    - cron: "0 9 * * 1" # Ejecutar todos los lunes a las 9:00 UTC
 
 jobs:
   test:
@@ -18,16 +18,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Install Chromium and Chromedriver
+      - name: Install Google Chrome and Chromedriver
         run: |
           sudo apt-get update
-          sudo apt-get install -y chromium-browser chromium-chromedriver
-          sudo ln -sf /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
+          sudo apt-get install -y google-chrome-stable
+          sudo apt-get install -y chromium-chromedriver
 
       - name: Verify Chromium installation
         run: |

@@ -2,24 +2,24 @@ import time
 import random
 import pandas as pd
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 
 # Mantener el navegador abierto después de que el programa termine
+chrome_service = Service("/usr/bin/google-chrome")
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_experimental_option("detach", True)
 chrome_options.binary_location = "/snap/bin/chromium"  # Ubicación del binario de Chromium
-chrome_options.add_argument("--headless")               # Ejecutar en modo sin interfaz
-chrome_options.add_argument("--no-sandbox")             # Solución para problemas de entorno
-chrome_options.add_argument("--disable-dev-shm-usage")  # Solución para problemas de memoria compartida
-chrome_options.add_argument("--disable-gpu")            # Deshabilitar GPU
-chrome_options.add_argument("--remote-debugging-port=9222")  # Habilitar puertos devtools
+chrome_options.add_argument("--headless")              # Ejecutar en modo sin interfaz
+chrome_options.add_argument("--no-sandbox")            # Solución para problemas de entorno
+chrome_options.add_argument("--disable-dev-shm-usage") # Solución para problemas de memoria compartida
 chrome_options.add_argument(
     "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.6778.86 Safari/537.36"
 )
 
 # Inicializar el webdriver
-driver = webdriver.Chrome(options=chrome_options)
+driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
 # URL de Fotocasa
 url = 'https://www.fotocasa.es/es/comprar/pisos/madrid-capital/todas-las-zonas/l?combinedLocationIds=724%2C14%2C28%2C173%2C0%2C28079%2C0%2C176%2C0%3B724%2C14%2C28%2C173%2C0%2C28079%2C0%2C177%2C142%3B724%2C14%2C28%2C173%2C0%2C28079%2C0%2C177%2C137%3B724%2C14%2C28%2C173%2C0%2C28079%2C0%2C681%2C107%3B724%2C14%2C28%2C173%2C0%2C28079%2C0%2C681%2C110&maxPrice=400000&minRooms=2'
