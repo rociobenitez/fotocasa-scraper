@@ -1,48 +1,43 @@
-name: Fotocasa Scraper Automation
+name: Fotocasa Scraper CI
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: "0 9 * * 1"
-  workflow_dispatch:
+    - cron: "0 9 * * 1"  # Ejecutar todos los lunes a las 9:00 UTC
 
 jobs:
-  run-script:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Check out repository
         uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
-
-      - name: Install Chrome and Chromedriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          sudo apt-get install -y chromium-chromedriver
-          ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver
+          python-version: '3.10'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
-      - name: Mostrar versiones instaladas
+      - name: Install Chromium and Chromedriver
         run: |
-          pip show numpy pandas | grep Version
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+          sudo ln -sf /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 
-      - name: Run scraper
+      - name: Verify Chromium installation
         run: |
-          python main.py
+          which chromium
+          chromium --version
 
-      - name: Upload results to repository
-        if: success()
+      - name: Verify Chromedriver installation
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add pisos_fotocasa.csv
-          git commit -m "Update pisos_fotocasa.csv from scraper [Automated]"
-          git push
+          which chromedriver
+          chromedriver --version
+
+      - name: Run Python script
+        run: python main.py
