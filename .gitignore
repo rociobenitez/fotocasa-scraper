@@ -18,6 +18,8 @@ Thumbs.db
 # Archivos de depuración o desarrollo
 *.log
 
-# Archivos generados
+# Ignorar todos los CSV
 *.csv
-*.html
+
+# Excluir la regla para la carpeta sample_data
+!sample_data/*.csv

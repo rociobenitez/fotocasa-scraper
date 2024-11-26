@@ -8,21 +8,37 @@ El código actualmente opera en un archivo HTML descargado para pruebas de scrap
 
 ## Características
 
-- Extracción de datos:
-  - Título del anuncio
-  - Precio
-  - Ubicación
-  - Superficie
-  - Habitaciones y baños
-  - Enlace al anuncio
-- Guardado de los datos en formato CSV.
-- Interacción automatizada con la página (versión con Selenium).
+- **Automatización de la navegación**: Interacción con la página mediante Selenium para manejar contenido dinámico y simulación de scroll.
+- **Extracción de datos**: Análisis del DOM con BeautifulSoup para capturar:
+   - Título del anuncio
+   - Precio
+   - Ubicación
+   - Superficie
+   - Habitaciones y baños
+   - Enlace al anuncio
+- **Salida estructurada**: Los datos extraídos se guardan en un archivo CSV.
+
+## Limitaciones y Consideraciones
+
+- **Bloqueos del sitio:**
+   - Fotocasa puede bloquear el acceso si detecta un uso automatizado (como scrapers).
+   - Posibles soluciones:
+      - Usar un **User-Agent** realista para simular un navegador.
+      - Implementar pausas aleatorias y un scroll más natural para evitar patrones repetitivos.
+      - Alternar direcciones IP utilizando una VPN o un servicio de proxies.
+- **Tiempos de carga:**
+   - Dependiendo de la conexión a internet, la página puede tardar en cargar todos los anuncios al hacer scroll.
+   - El script incluye pausas dinámicas para asegurar que los elementos del DOM estén completamente cargados antes de analizarlos.
+- **Actualizaciones dinámicas:**
+   - El script funciona correctamente en la estructura actual de Fotocasa. Si cambian las clases o elementos HTML, será necesario actualizar el código.
+- **Uso responsable:**
+   - Este script es para fines educativos y personales. Asegúrate de cumplir con los términos de uso de Fotocasa.
 
 ## Requisitos
 
-- Python 3.9+
-- Google Chrome y Chromedriver
-- Librerías necesarias: `beautifulsoup4 pandas selenium`
+- **Python** 3.9 o superior
+- **Google Chrome** y **Chromedriver**: Para Selenium
+- **Librerías necesarias**:
 
   ```bash
   pip install -r requirements.txt
@@ -32,50 +48,84 @@ El código actualmente opera en un archivo HTML descargado para pruebas de scrap
 
 ```plaintext
 fotocasa-scraper/
-├── fotocasa.html              # Archivo HTML descargado para pruebas con BeautifulSoup
-├── main_bs4.py                # Script principal que usa BeautifulSoup
-├── main_selenium.py           # Script combinado con Selenium y BeautifulSoup
-├── requirements.txt           # Dependencias del proyecto
-├── pisos_fotocasa_actualizado.csv  # Salida en formato CSV
-└── README.md                  # Documentación del proyecto
+├── main.py               # Script principal (Selenium y BeautifulSoup)
+├── requirements.txt      # Dependencias del proyecto
+├── sample_data           # Ubicación del CSV de ejemplo
+├── pisos_fotocasa.csv    # Salida en formato CSV
+└── README.md             # Documentación del proyecto
 ```
 
-- **`main_bs4.py`**: Extracción de datos usando un archivo HTML descargado.
-- **`main_selenium.py`**: Navegación automatizada con Selenium y análisis de datos con BeautifulSoup.
-- **`fotocasa.html`**: Archivo de prueba con HTML descargado.
-- **`pisos_fotocasa_actualizado.csv`**: Salida con los datos extraídos.
+## Ejecución del Script
 
-## Ejecución
-
-### Con BeautifulSoup
+1. **Configuración de dependencias:**
 
 ```bash
-python main_bs4.py
+pip install -r requirements.txt
 ```
 
-- El archivo `main_bs4.py` analiza un archivo HTML descargado y extrae los datos de los anuncios.
-- Es útil para pruebas sin realizar solicitudes repetidas al servidor.
-- Asegúrate de tener el archivo `fotocasa.html` en el mismo directorio.
-
-### Con Selenium
+2. **Ejecuta el script:**
 
 ```bash
-python main_selenium.py
+python main.py
 ```
 
-El archivo `main_selenium.py` usa Selenium para interactuar con la página y capturar el contenido dinámico generado por scroll.
+El script:
+- Acepta cookies automáticamente.
+- Realiza un scroll simulado para cargar todos los anuncios.
+- Navega por las páginas hasta que no haya más resultados.
+- Guarda los datos extraídos en un archivo CSV (`pisos_fotocasa.csv`).
 
-**Funcionalidades Adicionales:**
+Aquí está la versión modificada para incluir la opción de usar PythonAnywhere:
 
-- **Aceptar Cookies**: Interactúa con el banner de cookies automáticamente.
-- **Simulación de Scroll**: Carga todos los anuncios desplazándose por la página.
-- **Análisis con BeautifulSoup**: Extrae la información usando la lógica de `main_bs4.py`.
+---
+
+## Datos de Ejemplo
+
+En la carpeta `sample_data` encontrarás un archivo CSV de ejemplo (`fotocasa_sample.csv`) con tres viviendas extraídas de la página de Fotocasa. Este archivo está incluido para mostrar el formato de los datos generados por el script.
+
+### Notas:
+- El archivo `fotocasa_sample.csv` no se actualiza automáticamente.
+- Los datos del archivo son ficticios y solo se incluyen como referencia del resultado esperado al ejecutar el script.
+
+---
+
+## Automatización en PythonAnywhere
+
+#### **Configuración inicial:**
+
+1. **Regístrate y configura tu cuenta:**
+   - Crea una cuenta en [PythonAnywhere](https://www.pythonanywhere.com).
+
+2. **Sube el proyecto:**
+   - Ve a la sección **Files** y sube tus archivos (`main.py`, `requirements.txt`, etc.).
+
+3. **Instala las dependencias:**
+   - Abre el terminal en PythonAnywhere y ejecuta:
+     ```bash
+     pip install -r requirements.txt --user
+     ```
+
+#### **Configura una tarea programada:**
+
+1. En PythonAnywhere, ve a la sección **Tasks**.
+2. Crea una nueva tarea y establece la periodicidad, por ejemplo, cada lunes a las 9:00 AM.
+3. Introduce el comando para ejecutar tu script:
+   ```bash
+   python /home/tu_usuario/main.py
+   ```
+
+#### **Ventajas de PythonAnywhere:**
+- El script se ejecuta incluso si tu ordenador está apagado.
+- Evitas bloqueos por IP al usar la IP del servidor de PythonAnywhere.
+- Puedes acceder y supervisar el proyecto desde cualquier lugar.
+
+---
 
 ## **Enlaces de Referencia**
 
 - 🔗 [Documentación de Selenium](https://www.selenium.dev/documentation/)
 - 🔗 [Documentación de BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 
-## Licencia
+## Nota Importante
 
-Este proyecto es de uso educativo. Respeta las condiciones de uso del sitio web Fotocasa.
+> Este proyecto es de uso personal y educativo. Fotocasa puede bloquear el acceso a su sitio si detecta patrones automatizados. Asegúrate de respetar los términos de uso del sitio.

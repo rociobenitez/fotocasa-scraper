@@ -21,39 +21,50 @@ url = 'https://www.fotocasa.es/es/comprar/pisos/madrid-capital/todas-las-zonas/l
 driver.get(url)
 
 # Aceptar las cookies
-time.sleep(2) # Esperar a que cargue
 try:
+    time.sleep(2) # Esperar a que cargue
     cookies_button = driver.find_element(By.ID, 'didomi-notice-agree-button')
     cookies_button.click()
     print("Cookies aceptadas correctamente.")
     time.sleep(2)
 except Exception as e:
-    print("No se encontró el botón de cookies o no se aceptaron previamente.")
+    print("No se encontraron cookies o ya fueron aceptadas.")
 
-# Lista para almacenar todos los datos
-datos_totales = []
+# Función para realizar un scroll más natural
+def scroll_pagina(driver):
+    scroll_height = driver.execute_script("return document.body.scrollHeight")
+    current_position = 0
+    step = random.randint(200, 400)  # Pasos de desplazamiento aleatorios
+    
+    while current_position < scroll_height:
+        current_position += step
+        driver.execute_script(f"window.scrollTo(0, {current_position});")
+        time.sleep(random.uniform(1.5, 3))  # Pausa aleatoria entre scrolls
+        scroll_height = driver.execute_script("return document.body.scrollHeight")
+    
+    print("Scroll completado.")
 
+# Lista para almacenar los datos de todos los anuncios
+datos_pisos = []
+
+# Lógica de paginación
 while True:
-    # Simular scroll para cargar todos los anuncios en la página actual
-    prev_num_anuncios = 0
-    scroll_attempts = 0
-    max_scroll_attempts = 20  # Número máximo de intentos para evitar un bucle infinito
-
-    while scroll_attempts < max_scroll_attempts:
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(random.uniform(2, 4))  # Pausa aleatoria
-        anuncios_actuales = len(driver.find_elements(By.TAG_NAME, 'article'))
-        if anuncios_actuales == prev_num_anuncios:
-            break
-        prev_num_anuncios = anuncios_actuales
-        scroll_attempts += 1
-
-    # Capturar el HTML de la página actual
+    print(f"Extrayendo anuncios de: {driver.current_url}")
+    scroll_pagina(driver)  # Realizar scroll para cargar todos los anuncios
+    
+    # Obtener el HTML después del scroll
     page_source = driver.page_source
     soup = BeautifulSoup(page_source, 'html.parser')
+    
+    # Extraer la sección de resultados
     resultados = soup.find('section', class_='re-SearchResult')
-    anuncios = resultados.find_all('article') if resultados else []
+    if not resultados:
+        print("No se encontraron más resultados.")
+        break
+    
+    anuncios = resultados.find_all('article')
 
+    # Extraer datos de cada anuncio
     for anuncio in anuncios:
         try:
             # Título y ubicación (combinados)
@@ -99,7 +110,7 @@ while True:
             enlace = f"https://www.fotocasa.es{enlace_element['href']}" if enlace_element and enlace_element.get('href') else "Enlace no disponible"
 
             # Agregar los datos a la lista
-            datos_totales.append({
+            datos_pisos.append({
                 'Título': titulo,
                 'Precio': precio,
                 'Ubicación': ubicacion,
@@ -117,7 +128,7 @@ while True:
         next_page_url = next_page.get_attribute('href')
         print(f"Navegando a la siguiente página: {next_page_url}")
         driver.get(next_page_url)
-        time.sleep(3)  # Pausa para cargar la nueva página
+        time.sleep(random.uniform(3, 5))  # Pausa para cargar la nueva página
     except Exception as e:
         print("No hay más páginas disponibles.")
         break
@@ -126,7 +137,7 @@ while True:
 driver.quit()
 
 # Crear un DataFrame con los datos
-df = pd.DataFrame(datos_totales)
+df = pd.DataFrame(datos_pisos)
 
 # Guardar los datos en un archivo CSV
 df.to_csv('pisos_fotocasa.csv', index=False, encoding='utf-8-sig')
