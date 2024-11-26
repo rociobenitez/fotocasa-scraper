@@ -1,0 +1,23 @@
+# Archivos y carpetas relacionadas con Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos virtuales
+*.env
+*.venv
+env/
+venv/
+ENV/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de depuración o desarrollo
+*.log
+
+# Archivos generados
+*.csv
+*.html
