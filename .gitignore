@@ -1,10 +1,3 @@
-# Ignorar el CSV generado por el script
-data/pisos_fotocasa.csv
-
-# Ignorar carpetas y archivos temporales o innecesarios
-data/*.csv
-!data/fotocasa_sample.csv  # Permitir subir el CSV de ejemplo
-
 # Archivos y carpetas relacionadas con Python
 __pycache__/
 *.pyc
