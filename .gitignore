@@ -1,3 +1,10 @@
+# Ignorar el CSV generado por el script
+data/pisos_fotocasa.csv
+
+# Ignorar carpetas y archivos temporales o innecesarios
+data/*.csv
+!data/fotocasa_sample.csv  # Permitir subir el CSV de ejemplo
+
 # Archivos y carpetas relacionadas con Python
 __pycache__/
 *.pyc
@@ -17,9 +24,3 @@ Thumbs.db
 
 # Archivos de depuración o desarrollo
 *.log
-
-# Ignorar todos los CSV
-*.csv
-
-# Excluir la regla para la carpeta sample_data
-!sample_data/*.csv

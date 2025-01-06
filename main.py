@@ -7,11 +7,11 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 
 # Configurar el servicio de Chromedriver
-chrome_service = Service(executable_path="/usr/bin/chromedriver")
+chrome_service = Service()
 
 # Configurar opciones de Chrome
 chrome_options = webdriver.ChromeOptions()
-chrome_options.binary_location = "/snap/bin/chromium"
+chrome_options.add_experimental_option("detach", True)
 chrome_options.add_argument("--headless")                   # Ejecutar en modo sin interfaz
 chrome_options.add_argument("--no-sandbox")                 # Solución para problemas de entorno
 chrome_options.add_argument("--disable-dev-shm-usage")      # Solución para problemas de memoria compartida
@@ -146,5 +146,5 @@ driver.quit()
 df = pd.DataFrame(datos_pisos)
 
 # Guardar los datos en un archivo CSV
-df.to_csv('pisos_fotocasa.csv', index=False, encoding='utf-8-sig')
+df.to_csv('data/pisos_fotocasa.csv', index=False, encoding='utf-8-sig')
 print("Datos guardados en 'pisos_fotocasa.csv'")

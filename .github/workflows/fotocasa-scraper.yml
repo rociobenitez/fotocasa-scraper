@@ -47,6 +47,10 @@ jobs:
         run: |
           sudo ln -s /snap/bin/chromium /usr/bin/google-chrome || echo "Symlink already exists"
           sudo ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver || echo "Symlink already exists"
-
+          
+      - name: Verify Chromium works
+        run: |
+          chromium --headless --disable-gpu --dump-dom https://www.example.com || echo "Chromium failed to run"
+            
       - name: Run Python script
         run: python main.py
