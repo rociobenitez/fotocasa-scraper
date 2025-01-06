@@ -6,10 +6,13 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 
-# Mantener el navegador abierto después de que el programa termine
+# Configurar el servicio de Chromedriver
 chrome_service = Service()
+
+# Configurar opciones de Chrome
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_experimental_option("detach", True)
+chrome_options.binary_location = "/snap/bin/chromium"
 chrome_options.add_argument("--headless")              # Ejecutar en modo sin interfaz
 chrome_options.add_argument("--no-sandbox")            # Solución para problemas de entorno
 chrome_options.add_argument("--disable-dev-shm-usage") # Solución para problemas de memoria compartida

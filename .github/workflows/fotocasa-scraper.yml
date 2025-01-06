@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   schedule:
     - cron: "0 9 * * 1" # Ejecutar todos los lunes a las 9:00 UTC
 
@@ -23,11 +26,30 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Install Google Chrome and Chromedriver
+      - name: Find Google Chrome binary
+        run: |
+          which google-chrome || echo "google-chrome not found"
+          which chromium || echo "chromium not found"
+          which chromedriver || echo "chromedriver not found"
+          echo "Chromium version:"
+          chromium --version || echo "Chromium not installed"
+          echo "Google Chrome version:"
+          google-chrome --version || echo "Google Chrome not installed"
+          echo "Chromedriver version:"
+          chromedriver --version || echo "Chromedriver not installed"
+      
+      - name: Install Chrome and Chromedriver
         run: |
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          sudo apt-get install -y wget
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
           sudo apt-get install -y chromium-chromedriver
+          ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver
+          echo "Google Chrome version:"
+          google-chrome --version
+          echo "Chromedriver version:"
+          chromedriver --version
 
       - name: Verify Chromium installation
         run: |
