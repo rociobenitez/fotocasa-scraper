@@ -29,8 +29,20 @@ jobs:
       - name: Install Chrome and Chromedriver
         run: |
           sudo apt-get update
-          sudo apt-get update
           sudo apt-get install -y chromium-browser chromium-chromedriver
+
+      - name: Verify Chromium binary
+        run: |
+          if [ -f /snap/bin/chromium ]; then
+            echo "Chromium binary found at /snap/bin/chromium"
+          else
+            echo "Chromium binary not found at /snap/bin/chromium"
+            exit 1
+          fi
+
+      - name: Verify Chromium works
+        run: |
+          chromium --headless --disable-gpu --dump-dom https://www.example.com
 
       - name: Verify Chromium installation
         run: |
