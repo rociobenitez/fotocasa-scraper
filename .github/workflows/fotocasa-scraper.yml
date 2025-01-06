@@ -29,30 +29,24 @@ jobs:
       - name: Install Chrome and Chromedriver
         run: |
           sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
           sudo apt-get install -y chromium-browser chromium-chromedriver
 
-      - name: Verify Chromium binary
+      - name: Verify Chromium and Chromedriver
         run: |
-          if [ -f /snap/bin/chromium ]; then
-            echo "Chromium binary found at /snap/bin/chromium"
-          else
-            echo "Chromium binary not found at /snap/bin/chromium"
-            exit 1
-          fi
+          echo "Chromium binary:"
+          which chromium
+          chromium --version
+          echo "Chromedriver binary:"
+          which chromedriver
+          chromedriver --version
 
-      - name: Verify Chromium works
+      - name: Create symlinks (if necessary)
         run: |
-          chromium --headless --disable-gpu --dump-dom https://www.example.com
-
-      - name: Verify Chromium installation
-        run: |
-          which chromium || echo "chromium not found"
-          chromium --version || echo "chromium version error"
-
-      - name: Verify Chromedriver installation
-        run: |
-          which chromedriver || echo "chromedriver not found"
-          chromedriver --version || echo "chromedriver version error"
+          sudo ln -s /snap/bin/chromium /usr/bin/google-chrome || echo "Symlink already exists"
+          sudo ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver || echo "Symlink already exists"
 
       - name: Run Python script
         run: python main.py

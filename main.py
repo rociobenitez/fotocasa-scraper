@@ -11,12 +11,10 @@ chrome_service = Service(executable_path="/usr/bin/chromedriver")
 
 # Configurar opciones de Chrome
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_experimental_option("detach", True)
+chrome_options.binary_location = "/snap/bin/chromium"
 chrome_options.add_argument("--headless")                   # Ejecutar en modo sin interfaz
 chrome_options.add_argument("--no-sandbox")                 # Solución para problemas de entorno
 chrome_options.add_argument("--disable-dev-shm-usage")      # Solución para problemas de memoria compartida
-chrome_options.add_argument("--remote-debugging-port=9222")
-chrome_options.binary_location = "/snap/bin/chromium"
 chrome_options.add_argument(
     "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.6778.86 Safari/537.36"
 )
