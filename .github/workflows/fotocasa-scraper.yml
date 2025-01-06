@@ -26,41 +26,21 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Find Google Chrome binary
-        run: |
-          which google-chrome || echo "google-chrome not found"
-          which chromium || echo "chromium not found"
-          which chromedriver || echo "chromedriver not found"
-          echo "Chromium version:"
-          chromium --version || echo "Chromium not installed"
-          echo "Google Chrome version:"
-          google-chrome --version || echo "Google Chrome not installed"
-          echo "Chromedriver version:"
-          chromedriver --version || echo "Chromedriver not installed"
-      
       - name: Install Chrome and Chromedriver
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome-stable_current_amd64.deb
-          sudo apt-get install -y chromium-chromedriver
-          ln -s /snap/bin/chromium /usr/bin/google-chrome
-          ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver
-          echo "Google Chrome version:"
-          google-chrome --version
-          echo "Chromedriver version:"
-          chromedriver --version
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
 
       - name: Verify Chromium installation
         run: |
-          which chromium
-          chromium --version
+          which chromium || echo "chromium not found"
+          chromium --version || echo "chromium version error"
 
       - name: Verify Chromedriver installation
         run: |
-          which chromedriver
-          chromedriver --version
+          which chromedriver || echo "chromedriver not found"
+          chromedriver --version || echo "chromedriver version error"
 
       - name: Run Python script
         run: python main.py
